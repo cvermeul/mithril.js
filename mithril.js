@@ -735,6 +735,21 @@ var m = (function app(window, undefined) {
 		return gettersetter(store);
 	};
 
+	m.propc = function(value, callback) {
+		function accessor() {
+			if (arguments.length > 0) {
+				var previous = value;
+				value = arguments[0];
+				if (previous !== value) callback(value);
+			}
+			return value;
+		}
+		accessor.toJSON = function() {
+			return value;
+		};
+		return accessor;
+	};
+
 	var roots = [], components = [], controllers = [], lastRedrawId = null, lastRedrawCallTime = 0, computePreRedrawHook = null, computePostRedrawHook = null, topComponent, unloaders = [];
 	var FRAME_BUDGET = 16; //60 frames per second = 1 call per 16 ms
 	function parameterize(component, args) {
